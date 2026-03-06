@@ -521,7 +521,9 @@
     }
 
     function setupImagePreview(inputId, slotId, wrapperId) {
-        document.getElementById(inputId).addEventListener('change', function(e) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        input.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -535,10 +537,9 @@
         });
     }
 
+    // Attach to add form once on load
     setupImagePreview('obv-input', 'obv-slot', 'obv-wrapper');
     setupImagePreview('rev-input', 'rev-slot', 'rev-wrapper');
-    setupImagePreview('edit-obv-input', 'edit-obv-slot', 'edit-obv-wrapper');
-    setupImagePreview('edit-rev-input', 'edit-rev-slot', 'edit-rev-wrapper');
 
     function saveCoin() {
         const coinID = document.getElementById('coin-id').value.trim();
@@ -661,6 +662,10 @@
                 document.getElementById(`edit-${side}-wrapper`).classList.remove('has-image');
             }
         });
+
+        // *** FIXED: Attach preview listeners every time edit opens ***
+        setupImagePreview('edit-obv-input', 'edit-obv-slot', 'edit-obv-wrapper');
+        setupImagePreview('edit-rev-input', 'edit-rev-slot', 'edit-rev-wrapper');
 
         document.getElementById('add-card').style.display = 'none';
         document.getElementById('edit-card').style.display = 'block';
