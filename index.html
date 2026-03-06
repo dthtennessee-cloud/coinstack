@@ -423,7 +423,7 @@
             <input type="text" id="coin-id" placeholder="Coin ID (e.g. 0001)">
         </div>
         <div class="field-row">
-            <input type="text" id="coin-name" placeholder="Description / Year / Grade">
+            <input type="text" id="coin-name" placeholder="Description / Year / Mint / Type">
         </div>
 
         <div class="action-btns">
@@ -514,8 +514,7 @@
     function clearSlot(e, slotId, inputId, wrapperId) {
         e.stopPropagation();
         const slot = document.getElementById(slotId);
-        slot.innerHTML = `<span class="slot-icon">🪙</span>
-            <input type="file" id="${inputId}" hidden accept="image/*">`;
+        slot.innerHTML = `<span class="slot-icon">🪙</span><input type="file" id="${inputId}" hidden accept="image/*">`;
         slot.classList.remove('has-image');
         document.getElementById(wrapperId).classList.remove('has-image');
         setupImagePreview(inputId, slotId, wrapperId);
@@ -530,7 +529,7 @@
                 const slot = document.getElementById(slotId);
                 slot.innerHTML = `<img src="${ev.target.result}" alt="coin">`;
                 slot.classList.add('has-image');
-                if (wrapperId) document.getElementById(wrapperId).classList.add('has-image');
+                document.getElementById(wrapperId).classList.add('has-image');
             };
             reader.readAsDataURL(file);
         });
@@ -813,7 +812,6 @@
                     }));
                 } catch (err) {
                     showToast("⚠️ CSV error — check columns");
-                    console.error(err);
                     return;
                 }
             }
@@ -882,3 +880,29 @@
                 showToast(`✓ Vault replaced with ${coins.length} coin(s)`);
             };
         };
+    }
+
+    function toggleClearBtn() {
+        const val = document.getElementById('search-box').value;
+        document.getElementById('search-clear').classList.toggle('visible', val.length > 0);
+    }
+
+    function clearSearch() {
+        document.getElementById('search-box').value = '';
+        document.getElementById('search-clear').classList.remove('visible');
+        renderGallery();
+    }
+
+    function escHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    renderGallery();
+</script>
+
+</body>
+</html>
