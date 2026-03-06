@@ -8,8 +8,6 @@
     <link rel="manifest" href="manifest.json">
     <title>CoinStack</title>
     <style>
-        /* System fonts only — fully offline capable */
-
         :root {
             --bg: #f4f1eb;
             --surface: #ffffff;
@@ -36,7 +34,6 @@
             min-height: 100vh;
         }
 
-        /* ── HEADER ── */
         header {
             text-align: center;
             padding: 28px 20px 20px;
@@ -65,15 +62,13 @@
             text-transform: uppercase;
         }
 
-        /* ── MAIN CONTENT ── */
         main {
             max-width: 540px;
             margin: 0 auto;
             padding: 20px 16px;
         }
 
-        /* ── INPUT CARD ── */
-        .input-card {
+        .input-card, .edit-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -90,7 +85,6 @@
             font-weight: 600;
         }
 
-        /* ── COIN IMAGE SLOTS ── */
         .coin-slots {
             display: flex;
             gap: 16px;
@@ -152,19 +146,12 @@
             padding: 0;
             line-height: 1;
             z-index: 2;
-            flex: 0 0 22px !important;
         }
 
-        .slot-wrapper.has-image .slot-clear {
-            display: flex;
-        }
+        .slot-wrapper.has-image .slot-clear { display: flex; }
 
-        .slot-icon {
-            font-size: 1.6rem;
-            opacity: 0.25;
-        }
+        .slot-icon { font-size: 1.6rem; opacity: 0.25; }
 
-        /* ── TEXT INPUTS ── */
         .field-row {
             display: flex;
             gap: 10px;
@@ -181,7 +168,6 @@
             border-radius: 8px;
             font-size: 0.95rem;
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             outline: none;
             transition: border-color 0.2s;
             -webkit-appearance: none;
@@ -190,7 +176,6 @@
         input[type="text"]::placeholder { color: var(--text-dim); }
         input[type="text"]:focus { border-color: var(--gold-dim); }
 
-        /* ── ACTION BUTTONS ── */
         .action-btns {
             display: flex;
             gap: 10px;
@@ -204,7 +189,6 @@
             padding: 13px 20px;
             border-radius: 8px;
             border: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             font-weight: 600;
             font-size: 0.85rem;
             cursor: pointer;
@@ -215,24 +199,11 @@
 
         .btn:active { opacity: 0.8; transform: scale(0.98); }
 
-        .btn-save {
-            background: var(--gold);
-            color: #0f0f0f;
-        }
+        .btn-save { background: var(--gold); color: #0f0f0f; }
+        .btn-export { background: #ffffff; color: var(--text); border: 1px solid var(--border); }
+        .btn-import { background: #ffffff; color: var(--gold); border: 1px solid var(--gold-dim); }
+        .btn-cancel { background: #ccc; color: #333; }
 
-        .btn-export {
-            background: #ffffff;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-import {
-            background: #ffffff;
-            color: var(--gold);
-            border: 1px solid var(--gold-dim);
-        }
-
-        /* ── GALLERY ── */
         .gallery-header {
             display: flex;
             justify-content: space-between;
@@ -247,12 +218,8 @@
             color: var(--text-dim);
         }
 
-        .coin-count span {
-            color: var(--gold);
-            font-weight: 600;
-        }
+        .coin-count span { color: var(--gold); font-weight: 600; }
 
-        /* ── SEARCH ── */
         .search-wrap {
             position: relative;
             margin-bottom: 16px;
@@ -260,11 +227,8 @@
 
         .search-wrap input {
             padding-left: 38px;
-            width: 100%;
-        }
-
-        .search-wrap input {
             padding-right: 36px;
+            width: 100%;
         }
 
         .search-clear {
@@ -284,14 +248,9 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 0;
-            line-height: 1;
-            flex: 0 0 20px !important;
         }
 
-        .search-clear.visible {
-            display: flex;
-        }
+        .search-clear.visible { display: flex; }
 
         .search-icon {
             position: absolute;
@@ -309,7 +268,6 @@
             gap: 10px;
         }
 
-        /* ── COIN CARD ── */
         .coin-card {
             display: flex;
             align-items: center;
@@ -321,15 +279,12 @@
             transition: border-color 0.2s;
             position: relative;
             box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            cursor: pointer;
         }
 
-        .coin-card.confirm-delete {
-            border-color: var(--danger);
-        }
+        .coin-card.confirm-delete { border-color: var(--danger); }
 
-        .card-img-wrap {
-            flex-shrink: 0;
-        }
+        .card-img-wrap { flex-shrink: 0; }
 
         .card-img {
             width: 52px;
@@ -337,7 +292,6 @@
             border-radius: 50%;
             border: 1.5px solid var(--gold-dim);
             object-fit: cover;
-            display: block;
         }
 
         .card-img-placeholder {
@@ -351,13 +305,9 @@
             justify-content: center;
             font-size: 1.1rem;
             color: var(--silver);
-            flex-shrink: 0;
         }
 
-        .card-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .card-info { flex: 1; min-width: 0; }
 
         .card-id {
             font-size: 0.68rem;
@@ -382,7 +332,6 @@
             margin-top: 3px;
         }
 
-        /* ── DELETE BUTTON (fixed) ── */
         .delete-btn {
             flex-shrink: 0;
             width: 32px;
@@ -392,21 +341,10 @@
             background: transparent;
             color: var(--text-dim);
             font-size: 1rem;
-            line-height: 1;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
-            transition: all 0.15s;
-            /* Override any inherited flex/padding from global button styles */
-            flex: 0 0 32px !important;
-        }
-
-        .delete-btn:hover, .delete-btn:active {
-            background: rgba(224, 82, 82, 0.15);
-            border-color: var(--danger);
-            color: var(--danger);
         }
 
         .delete-btn.armed {
@@ -414,16 +352,11 @@
             border-color: var(--danger-confirm);
             color: white;
             font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
             width: auto;
-            flex: 0 0 auto !important;
             padding: 0 10px;
             border-radius: 6px;
-            font-family: 'Inter', sans-serif;
         }
 
-        /* ── EMPTY STATE ── */
         .empty-state {
             text-align: center;
             padding: 50px 20px;
@@ -431,9 +364,7 @@
         }
 
         .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
-        .empty-state p { font-size: 0.85rem; line-height: 1.6; }
 
-        /* ── TOAST ── */
         #toast {
             position: fixed;
             bottom: 30px;
@@ -445,12 +376,10 @@
             padding: 10px 20px;
             border-radius: 30px;
             font-size: 0.8rem;
-            letter-spacing: 0.5px;
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
             z-index: 100;
             pointer-events: none;
-            white-space: nowrap;
         }
 
         #toast.show {
@@ -468,8 +397,7 @@
 
 <main>
 
-    <!-- INPUT CARD -->
-    <div class="input-card">
+    <div id="add-card" class="input-card">
         <div class="section-label">Add New Coin</div>
 
         <div class="coin-slots">
@@ -492,7 +420,7 @@
         </div>
 
         <div class="field-row">
-            <input type="text" id="coin-id" placeholder="Coin ID (e.g. MORG-1921)">
+            <input type="text" id="coin-id" placeholder="Coin ID (e.g. 0001)">
         </div>
         <div class="field-row">
             <input type="text" id="coin-name" placeholder="Description / Year / Grade">
@@ -502,13 +430,47 @@
             <button class="btn btn-save" onclick="saveCoin()">＋ Add to Vault</button>
             <button class="btn btn-export" onclick="exportVault()">↓ Export</button>
             <button class="btn btn-import">↑ Import</button>
-            <input type="file" id="import-input" hidden accept=".json">
+            <input type="file" id="import-input" hidden accept=".json,.csv">
         </div>
     </div>
 
-    <!-- GALLERY SECTION -->
+    <div id="edit-card" class="edit-card" style="display:none;">
+        <div class="section-label">Edit Coin</div>
+
+        <div class="coin-slots">
+            <div class="slot-wrapper" id="edit-obv-wrapper">
+                <button class="slot-clear" onclick="clearSlot(event, 'edit-obv-slot', 'edit-obv-input', 'edit-obv-wrapper')">✕</button>
+                <div class="slot" id="edit-obv-slot" onclick="document.getElementById('edit-obv-input').click()">
+                    <span class="slot-icon">🪙</span>
+                    <input type="file" id="edit-obv-input" hidden accept="image/*">
+                </div>
+                <div class="slot-label">Obverse</div>
+            </div>
+            <div class="slot-wrapper" id="edit-rev-wrapper">
+                <button class="slot-clear" onclick="clearSlot(event, 'edit-rev-slot', 'edit-rev-input', 'edit-rev-wrapper')">✕</button>
+                <div class="slot" id="edit-rev-slot" onclick="document.getElementById('edit-rev-input').click()">
+                    <span class="slot-icon">🪙</span>
+                    <input type="file" id="edit-rev-input" hidden accept="image/*">
+                </div>
+                <div class="slot-label">Reverse</div>
+            </div>
+        </div>
+
+        <div class="field-row">
+            <input type="text" id="edit-coin-id" placeholder="Coin ID">
+        </div>
+        <div class="field-row">
+            <input type="text" id="edit-coin-name" placeholder="Description">
+        </div>
+
+        <div class="action-btns">
+            <button class="btn btn-save" onclick="saveEdit()">Save Changes</button>
+            <button class="btn btn-cancel" onclick="cancelEdit()">Cancel</button>
+        </div>
+    </div>
+
     <div class="gallery-header">
-        <div class="section-label" style="margin-bottom:0;">Vault Gallery</div>
+        <div class="section-label">Vault Gallery</div>
         <div class="coin-count">Total: <span id="coin-total">0</span></div>
     </div>
 
@@ -526,13 +488,13 @@
 
 <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('sw.js');
     }
 
     let db;
-    let deleteArmed = null; // tracks which card has a pending delete
+    let deleteArmed = null;
+    let editingId = null;
 
-    // ── IndexedDB Init ──
     const request = indexedDB.open("CoinStackVault", 2);
 
     request.onupgradeneeded = (e) => {
@@ -547,11 +509,8 @@
         renderGallery();
     };
 
-    request.onerror = (e) => {
-        showToast("⚠️ Storage error — check browser settings");
-    };
+    request.onerror = () => showToast("⚠️ Storage error");
 
-    // ── Clear individual image slot ──
     function clearSlot(e, slotId, inputId, wrapperId) {
         e.stopPropagation();
         const slot = document.getElementById(slotId);
@@ -562,7 +521,6 @@
         setupImagePreview(inputId, slotId, wrapperId);
     }
 
-    // ── Image Preview ──
     function setupImagePreview(inputId, slotId, wrapperId) {
         document.getElementById(inputId).addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -577,10 +535,12 @@
             reader.readAsDataURL(file);
         });
     }
+
     setupImagePreview('obv-input', 'obv-slot', 'obv-wrapper');
     setupImagePreview('rev-input', 'rev-slot', 'rev-wrapper');
+    setupImagePreview('edit-obv-input', 'edit-obv-slot', 'edit-obv-wrapper');
+    setupImagePreview('edit-rev-input', 'edit-rev-slot', 'edit-rev-wrapper');
 
-    // ── Save Coin ──
     function saveCoin() {
         const coinID = document.getElementById('coin-id').value.trim();
         const name   = document.getElementById('coin-name').value.trim();
@@ -591,10 +551,10 @@
         }
 
         const coin = {
-            coinID:    coinID || "No ID",
-            name:      name   || "Unnamed Coin",
-            obverse:   document.querySelector('#obv-slot img')?.src || null,
-            reverse:   document.querySelector('#rev-slot img')?.src || null,
+            coinID: coinID || "No ID",
+            name: name || "Unnamed Coin",
+            obverse: document.querySelector('#obv-slot img')?.src || null,
+            reverse: document.querySelector('#rev-slot img')?.src || null,
             dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
         };
 
@@ -603,34 +563,29 @@
         tx.oncomplete = () => {
             renderGallery();
             resetForm();
-            showToast("✓ Coin added to vault");
+            showToast("✓ Coin added");
         };
-        tx.onerror = () => showToast("⚠️ Save failed");
     }
 
     function resetForm() {
         document.getElementById('coin-id').value = '';
         document.getElementById('coin-name').value = '';
-        const obvSlot = document.getElementById('obv-slot');
-        const revSlot = document.getElementById('rev-slot');
-        obvSlot.innerHTML = '<span class="slot-icon">🪙</span><input type="file" id="obv-input" hidden accept="image/*">';
-        revSlot.innerHTML = '<span class="slot-icon">🪙</span><input type="file" id="rev-input" hidden accept="image/*">';
-        obvSlot.classList.remove('has-image');
-        revSlot.classList.remove('has-image');
-        document.getElementById('obv-wrapper').classList.remove('has-image');
-        document.getElementById('rev-wrapper').classList.remove('has-image');
-        setupImagePreview('obv-input', 'obv-slot', 'obv-wrapper');
-        setupImagePreview('rev-input', 'rev-slot', 'rev-wrapper');
+        ['obv', 'rev'].forEach(side => {
+            const slot = document.getElementById(`${side}-slot`);
+            slot.innerHTML = `<span class="slot-icon">🪙</span><input type="file" id="${side}-input" hidden accept="image/*">`;
+            slot.classList.remove('has-image');
+            document.getElementById(`${side}-wrapper`).classList.remove('has-image');
+            setupImagePreview(`${side}-input`, `${side}-slot`, `${side}-wrapper`);
+        });
     }
 
-    // ── Render Gallery ──
     function renderGallery() {
-        const gallery   = document.getElementById('gallery');
+        const gallery = document.getElementById('gallery');
         const searchVal = document.getElementById('search-box').value.trim().toLowerCase();
         gallery.innerHTML = '';
         deleteArmed = null;
 
-        const tx    = db.transaction("coins", "readonly");
+        const tx = db.transaction("coins", "readonly");
         const store = tx.objectStore("coins");
         const coins = [];
 
@@ -641,7 +596,7 @@
                 cursor.continue();
             } else {
                 const filtered = searchVal
-                    ? coins.filter(c =>
+                    ? coins.filter(c => 
                         c.coinID.toLowerCase().includes(searchVal) ||
                         c.name.toLowerCase().includes(searchVal))
                     : coins;
@@ -652,7 +607,7 @@
                     gallery.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">🏛️</div>
-                            <p>${searchVal ? 'No coins match your search.' : 'Your vault is empty.<br>Add your first coin above.'}</p>
+                            <p>${searchVal ? 'No coins match your search.' : 'Your vault is empty.<br>Add or import coins.'}</p>
                         </div>`;
                     return;
                 }
@@ -673,81 +628,138 @@
                             <div class="card-title">${escHtml(data.name)}</div>
                             <div class="card-date">${data.dateAdded || ''}</div>
                         </div>
-                        <button class="delete-btn" data-id="${data.id}" onclick="handleDelete(this, ${data.id})">✕</button>
+                        <button class="delete-btn" data-id="${data.id}" onclick="handleDelete(this, ${data.id}); event.stopPropagation();">✕</button>
                     `;
+
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('delete-btn')) {
+                            startEdit(data);
+                        }
+                    });
+
                     gallery.appendChild(card);
                 });
             }
         };
     }
 
-    // ── Two-tap Delete (no confirm() dialog — works on iOS) ──
+    function startEdit(data) {
+        editingId = data.id;
+
+        document.getElementById('edit-coin-id').value = data.coinID || '';
+        document.getElementById('edit-coin-name').value = data.name || '';
+
+        ['obv', 'rev'].forEach(side => {
+            const slot = document.getElementById(`edit-${side}-slot`);
+            const imgSrc = data[side === 'obv' ? 'obverse' : 'reverse'];
+            if (imgSrc) {
+                slot.innerHTML = `<img src="${imgSrc}" alt="${side}">`;
+                slot.classList.add('has-image');
+                document.getElementById(`edit-${side}-wrapper`).classList.add('has-image');
+            } else {
+                slot.innerHTML = `<span class="slot-icon">🪙</span><input type="file" id="edit-${side}-input" hidden accept="image/*">`;
+                slot.classList.remove('has-image');
+                document.getElementById(`edit-${side}-wrapper`).classList.remove('has-image');
+            }
+        });
+
+        document.getElementById('add-card').style.display = 'none';
+        document.getElementById('edit-card').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function saveEdit() {
+        if (!editingId) return;
+
+        const coinID = document.getElementById('edit-coin-id').value.trim();
+        const name   = document.getElementById('edit-coin-name').value.trim();
+
+        if (!coinID && !name) {
+            showToast("Enter Coin ID or description");
+            return;
+        }
+
+        const updates = {
+            coinID: coinID || "No ID",
+            name: name || "Unnamed Coin",
+            obverse: document.querySelector('#edit-obv-slot img')?.src || null,
+            reverse: document.querySelector('#edit-rev-slot img')?.src || null,
+            dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        };
+
+        const tx = db.transaction("coins", "readwrite");
+        const store = tx.objectStore("coins");
+        const getReq = store.get(editingId);
+
+        getReq.onsuccess = () => {
+            const existing = getReq.result || {};
+            const updated = { ...existing, ...updates };
+
+            store.put(updated);
+            tx.oncomplete = () => {
+                renderGallery();
+                cancelEdit();
+                showToast("✓ Changes saved");
+            };
+        };
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('edit-card').style.display = 'none';
+        document.getElementById('add-card').style.display = 'block';
+    }
+
     function handleDelete(btn, id) {
         if (deleteArmed === id) {
-            // Second tap — actually delete
             const tx = db.transaction("coins", "readwrite");
             tx.objectStore("coins").delete(id);
             tx.oncomplete = () => {
                 renderGallery();
-                showToast("Coin removed from vault");
+                showToast("Coin removed");
             };
         } else {
-            // Disarm any previously armed button
             if (deleteArmed !== null) {
                 const prevBtn = document.querySelector(`.delete-btn[data-id="${deleteArmed}"]`);
-                const prevCard = document.querySelector(`.coin-card[data-id="${deleteArmed}"]`);
-                if (prevBtn)  { prevBtn.textContent = '✕'; prevBtn.classList.remove('armed'); }
-                if (prevCard) { prevCard.classList.remove('confirm-delete'); }
+                if (prevBtn) prevBtn.textContent = '✕'; prevBtn.classList.remove('armed');
             }
 
-            // Arm this button — first tap
             deleteArmed = id;
             btn.textContent = 'DELETE?';
             btn.classList.add('armed');
-            btn.closest('.coin-card').classList.add('confirm-delete');
 
-            // Auto-disarm after 3 seconds
             setTimeout(() => {
                 if (deleteArmed === id) {
                     btn.textContent = '✕';
                     btn.classList.remove('armed');
-                    const card = btn.closest('.coin-card');
-                    if (card) card.classList.remove('confirm-delete');
                     deleteArmed = null;
                 }
             }, 3000);
         }
     }
 
-    // Tap anywhere else to disarm
     document.addEventListener('click', (e) => {
         if (deleteArmed !== null && !e.target.classList.contains('delete-btn')) {
-            const prevBtn  = document.querySelector(`.delete-btn[data-id="${deleteArmed}"]`);
-            const prevCard = document.querySelector(`.coin-card[data-id="${deleteArmed}"]`);
-            if (prevBtn)  { prevBtn.textContent = '✕'; prevBtn.classList.remove('armed'); }
-            if (prevCard) { prevCard.classList.remove('confirm-delete'); }
+            const prevBtn = document.querySelector(`.delete-btn[data-id="${deleteArmed}"]`);
+            if (prevBtn) prevBtn.textContent = '✕'; prevBtn.classList.remove('armed');
             deleteArmed = null;
         }
     });
 
-    // ── Export ──
     function exportVault() {
         const tx = db.transaction("coins", "readonly");
         tx.objectStore("coins").getAll().onsuccess = (e) => {
             const coins = e.target.result;
-            if (coins.length === 0) { showToast("Vault is empty — nothing to export"); return; }
+            if (coins.length === 0) { showToast("Vault empty"); return; }
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(coins, null, 2));
             const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", `coinstack_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(dl);
+            dl.href = dataStr;
+            dl.download = `coinstack_${new Date().toISOString().slice(0,10)}.json`;
             dl.click();
-            document.body.removeChild(dl);
             showToast(`✓ Exported ${coins.length} coins`);
         };
     }
 
-    // ── Toast Notification ──
     function showToast(msg) {
         const toast = document.getElementById('toast');
         toast.textContent = msg;
@@ -755,22 +767,17 @@
         setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    // ── Import (Replace All) ──
     let importArmed = false;
     let importCoinsStaged = null;
 
-    // Override the Import button click entirely in JS
     const importBtn = document.querySelector('.btn-import');
-    importBtn.onclick = null; // remove inline handler
     importBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         if (importArmed && importCoinsStaged) {
-            // Second tap — do the replace
             importArmed = false;
             doReplaceAll(importCoinsStaged);
             importCoinsStaged = null;
         } else {
-            // First tap — open file picker
             document.getElementById('import-input').click();
         }
     });
@@ -778,34 +785,87 @@
     document.getElementById('import-input').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
+
         const reader = new FileReader();
         reader.onload = (ev) => {
-            let coins;
-            try {
-                coins = JSON.parse(ev.target.result);
-            } catch {
-                showToast("⚠️ Invalid file — not a CoinStack JSON");
-                return;
+            let coins = [];
+
+            if (file.name.toLowerCase().endsWith('.json')) {
+                try {
+                    coins = JSON.parse(ev.target.result);
+                } catch {
+                    showToast("⚠️ Invalid JSON");
+                    return;
+                }
+            } else if (file.name.toLowerCase().endsWith('.csv')) {
+                try {
+                    const raw = parseCSV(ev.target.result);
+                    coins = raw.map(row => ({
+                        coinID: row.CoinID || row.coinID || "No ID",
+                        name: [
+                            row.Year || row.year || '',
+                            (row.Mintmark || row.Mint || row.mintmark || row.MintName || '').charAt(0),
+                            row.CoinTypeName || row.CoinType || row.cointypename || ''
+                        ].filter(Boolean).join(' ').trim(),
+                        obverse: null,
+                        reverse: null,
+                        dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                    }));
+                } catch (err) {
+                    showToast("⚠️ CSV error — check columns");
+                    console.error(err);
+                    return;
+                }
             }
+
             if (!Array.isArray(coins) || coins.length === 0) {
-                showToast("⚠️ No coins found in file");
+                showToast("⚠️ No coins found");
                 return;
             }
-            // Arm — waiting for second tap
+
             importCoinsStaged = coins;
             importArmed = true;
-            showToast(`⚠️ Tap Import again to REPLACE vault with ${coins.length} coin(s)`);
+            showToast(`⚠️ Tap Import again to REPLACE with ${coins.length} coin(s)`);
             setTimeout(() => {
                 if (importArmed) {
                     importArmed = false;
                     importCoinsStaged = null;
-                    showToast("Import cancelled — timed out");
+                    showToast("Import cancelled");
                 }
-            }, 5000);
+            }, 8000);
         };
+
         reader.readAsText(file);
         this.value = '';
     });
+
+    function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = parseCSVLine(lines[0]);
+        const data = [];
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const values = parseCSVLine(lines[i]);
+            const obj = {};
+            headers.forEach((h, j) => { obj[h.trim()] = values[j] ? values[j].trim() : ''; });
+            data.push(obj);
+        }
+        return data;
+    }
+
+    function parseCSVLine(line) {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let char of line + ',') {
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) {
+                result.push(current);
+                current = '';
+            } else current += char;
+        }
+        return result;
+    }
 
     function doReplaceAll(coins) {
         const tx = db.transaction("coins", "readwrite");
@@ -821,32 +881,4 @@
                 renderGallery();
                 showToast(`✓ Vault replaced with ${coins.length} coin(s)`);
             };
-            tx2.onerror = () => showToast("⚠️ Import failed — try again");
         };
-    }
-
-    // ── Search Clear Button ──
-    function toggleClearBtn() {
-        const val = document.getElementById('search-box').value;
-        const btn = document.getElementById('search-clear');
-        btn.classList.toggle('visible', val.length > 0);
-    }
-
-    function clearSearch() {
-        document.getElementById('search-box').value = '';
-        document.getElementById('search-clear').classList.remove('visible');
-        renderGallery();
-    }
-
-    // ── Escape HTML ──
-    function escHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-</script>
-
-</body>
-</html>
