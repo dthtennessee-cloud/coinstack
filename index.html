@@ -30,7 +30,7 @@
             background: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 0 0 80px 0;
+            padding: 0 0 60px 0;
             overflow-x: hidden;
         }
 
@@ -80,12 +80,11 @@
 
         #search-clear.visible { display: block; }
 
-        /* --- TWIN VIEW RESTORED --- */
         .gallery {
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .coin-card {
@@ -93,22 +92,22 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
         }
 
         .twin-view {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 12px;
         }
 
         .coin-photo-container {
             flex: 1;
             aspect-ratio: 1/1;
-            background: var(--surface2);
+            background: #eee;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid var(--border);
+            position: relative;
         }
 
         .coin-img {
@@ -117,25 +116,23 @@
             object-fit: cover;
         }
 
-        .photo-label {
-            position: absolute;
-            bottom: 4px;
-            left: 4px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
         .coin-details {
             border-top: 1px solid var(--border);
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
-        .coin-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-        .coin-meta { font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; }
+        .coin-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .coin-meta {
+            font-size: 11px;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+        }
 
         .nav-bar {
             position: fixed;
@@ -183,8 +180,8 @@
         }
 
         .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 12px; font-weight: 600; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; }
+        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; outline: none; }
 
         .btn-row { display: flex; gap: 10px; margin-top: 20px; }
         .btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; }
@@ -201,12 +198,10 @@
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 13px;
             z-index: 2000;
             display: none;
         }
-
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
     </style>
 </head>
 <body>
@@ -232,45 +227,40 @@
 
     <div id="add-modal" class="modal">
         <div class="modal-content">
-            <h3>Add New Specimen</h3>
+            <h3>Add Specimen</h3>
             <div class="form-group">
-                <label>Obverse (Front)</label>
+                <label>Obverse</label>
                 <input type="file" id="coin-obverse" accept="image/*" capture="environment">
             </div>
             <div class="form-group">
-                <label>Reverse (Back)</label>
+                <label>Reverse</label>
                 <input type="file" id="coin-reverse" accept="image/*" capture="environment">
             </div>
             <div class="form-group">
-                <label>Identification / Name</label>
-                <input type="text" id="coin-name" placeholder="e.g. 7th C. Arab-Byzantine Follis">
+                <label>Identification</label>
+                <input type="text" id="coin-name" placeholder="Name of coin">
             </div>
             <div class="form-group">
-                <label>Coin ID / Catalog #</label>
-                <input type="text" id="coin-id-val" placeholder="e.g. #001">
+                <label>Coin ID</label>
+                <input type="text" id="coin-id-val" placeholder="#001">
             </div>
             <div class="btn-row">
                 <button class="btn btn-secondary" onclick="closeModal('add-modal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveCoin()">Save Specimen</button>
+                <button class="btn btn-primary" onclick="saveCoin()">Save</button>
             </div>
         </div>
     </div>
 
     <div id="settings-modal" class="modal">
         <div class="modal-content">
-            <h3>Vault Management</h3>
-            <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 20px;">Backup your collection or import a previous data file (.json or .csv).</p>
-            
-            <button class="btn btn-secondary btn-import" style="width: 100%; margin-bottom: 10px;">↑ Import Data File</button>
+            <h3>Vault Settings</h3>
+            <button class="btn btn-secondary btn-import" style="width: 100%; margin-bottom: 10px;">Import JSON/CSV</button>
             <input type="file" id="import-input" style="display:none;" accept=".json,.csv">
             
-            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;" onclick="exportData()">↓ Export Backup</button>
+            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 20px;" onclick="exportData()">Export Backup</button>
             
-            <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-                <button class="btn btn-danger" style="width: 100%;" onclick="wipeDatabase()">Wipe Local Database</button>
-            </div>
-            
-            <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;" onclick="closeModal('settings-modal')">Close</button>
+            <button class="btn btn-danger" style="width: 100%;" onclick="wipeDatabase()">Wipe Database</button>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="closeModal('settings-modal')">Close</button>
         </div>
     </div>
 
@@ -301,29 +291,18 @@
         const obvFile = document.getElementById('coin-obverse').files[0];
         const revFile = document.getElementById('coin-reverse').files[0];
 
-        if (!name) { showToast("Please enter a name"); return; }
+        if (!name) return;
 
         let obverse = obvFile ? await toBase64(obvFile) : null;
         let reverse = revFile ? await toBase64(revFile) : null;
 
-        const newCoin = {
-            name,
-            coinID,
-            obverse,
-            reverse,
-            dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-        };
-
         const tx = db.transaction("coins", "readwrite");
-        tx.objectStore("coins").add(newCoin);
+        tx.objectStore("coins").add({
+            name, coinID, obverse, reverse,
+            dateAdded: new Date().toLocaleDateString()
+        });
         tx.oncomplete = () => {
-            closeModal('add-modal');
-            document.getElementById('coin-name').value = '';
-            document.getElementById('coin-id-val').value = '';
-            document.getElementById('coin-obverse').value = '';
-            document.getElementById('coin-reverse').value = '';
-            renderGallery();
-            showToast("✓ Specimen saved");
+            location.reload();
         };
     }
 
@@ -340,38 +319,29 @@
         gallery.innerHTML = '';
 
         const tx = db.transaction("coins", "readonly");
-        const store = tx.objectStore("coins");
-        const request = store.getAll();
-
-        request.onsuccess = () => {
-            const coins = request.result;
-            const filtered = coins.filter(c => 
+        tx.objectStore("coins").getAll().onsuccess = (e) => {
+            const coins = e.target.result.filter(c => 
                 c.name.toLowerCase().includes(searchTerm) || 
                 (c.coinID && c.coinID.toLowerCase().includes(searchTerm))
             );
 
-            if (filtered.length === 0) {
-                gallery.innerHTML = `<div class="empty-state">No specimens found.</div>`;
-                return;
-            }
-
-            filtered.reverse().forEach(coin => {
+            coins.reverse().forEach(coin => {
                 const card = document.createElement('div');
                 card.className = 'coin-card';
                 card.innerHTML = `
-                    <div class="twin-view">
-                        <div class="coin-photo-container">
-                            <img class="coin-img" src="${coin.obverse || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}">
+                    <div class=\"twin-view\">
+                        <div class=\"coin-photo-container\">
+                            <img class=\"coin-img\" src=\"${coin.obverse || ''}\">
                         </div>
-                        <div class="coin-photo-container">
-                            <img class="coin-img" src="${coin.reverse || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}">
+                        <div class=\"coin-photo-container\">
+                            <img class=\"coin-img\" src=\"${coin.reverse || ''}\">
                         </div>
                     </div>
-                    <div class="coin-details">
-                        <div class="coin-name">${escHtml(coin.name)}</div>
-                        <div class="coin-meta">
-                            <span>ID: ${escHtml(coin.coinID || 'None')}</span>
-                            <span>Added: ${coin.dateAdded || 'Unknown'}</span>
+                    <div class=\"coin-details\">
+                        <div class=\"coin-name\">${escHtml(coin.name)}</div>
+                        <div class=\"coin-meta\">
+                            <span>ID: ${escHtml(coin.coinID || 'N/A')}</span>
+                            <span>${coin.dateAdded || ''}</span>
                         </div>
                     </div>
                 `;
@@ -382,87 +352,48 @@
 
     function exportData() {
         const tx = db.transaction("coins", "readonly");
-        const store = tx.objectStore("coins");
-        store.getAll().onsuccess = (e) => {
-            const data = JSON.stringify(e.target.result);
-            const blob = new Blob([data], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
+        tx.objectStore("coins").getAll().onsuccess = (e) => {
+            const blob = new Blob([JSON.stringify(e.target.result)], { type: "application/json" });
             const a = document.createElement("a");
-            const date = new Date().toISOString().split('T')[0];
-            a.href = url;
-            a.download = `coinstack_${date}.json`;
+            a.href = URL.createObjectURL(blob);
+            a.download = `coinstack_backup.json`;
             a.click();
-            showToast("✓ Export complete");
         };
     }
 
-    // --- STREAMLINED IMPORT FOR iOS 26.4.1 ---
+    // --- SURGICAL IMPORT FIX ---
     const importBtn = document.querySelector('.btn-import');
     const importInput = document.getElementById('import-input');
 
-    if (importBtn) {
-        importBtn.addEventListener('click', () => importInput.click());
-    }
+    importBtn.addEventListener('click', () => importInput.click());
 
-    if (importInput) {
-        importInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                let coins = [];
-                try {
-                    coins = JSON.parse(ev.target.result);
-                } catch {
-                    showToast("⚠️ Invalid data file");
-                    return;
+    importInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const coins = JSON.parse(ev.target.result);
+                if (confirm(`Replace vault with ${coins.length} coins?`)) {
+                    const tx = db.transaction("coins", "readwrite");
+                    const store = tx.objectStore("coins");
+                    store.clear().onsuccess = () => {
+                        const tx2 = db.transaction("coins", "readwrite");
+                        coins.forEach(c => { delete c.id; tx2.objectStore("coins").add(c); });
+                        tx2.oncomplete = () => location.reload();
+                    };
                 }
-
-                if (Array.isArray(coins) && coins.length > 0) {
-                    if (confirm(`REPLACE current vault with ${coins.length} specimens?`)) {
-                        doReplaceAll(coins);
-                    }
-                } else {
-                    showToast("⚠️ No data found");
-                }
-            };
-            reader.readAsText(file);
-            this.value = '';
-        });
-    }
-
-    function doReplaceAll(coins) {
-        const tx = db.transaction("coins", "readwrite");
-        const store = tx.objectStore("coins");
-        store.clear().onsuccess = () => {
-            const tx2 = db.transaction("coins", "readwrite");
-            const store2 = tx2.objectStore("coins");
-            coins.forEach(coin => {
-                const { id, ...coinData } = coin;
-                store2.add(coinData);
-            });
-            tx2.oncomplete = () => {
-                renderGallery();
-                closeModal('settings-modal');
-                showToast(`✓ Vault restored`);
-            };
+            } catch (err) { alert("Invalid file"); }
         };
-    }
+        reader.readAsText(file);
+    });
 
     function wipeDatabase() {
-        if (confirm("Permanently wipe all local data?")) {
+        if (confirm("Delete all data?")) {
             const tx = db.transaction("coins", "readwrite");
             tx.objectStore("coins").clear();
-            tx.oncomplete = () => { renderGallery(); closeModal('settings-modal'); showToast("Vault cleared"); };
+            tx.oncomplete = () => location.reload();
         }
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg;
-        t.style.display = 'block';
-        setTimeout(() => { t.style.display = 'none'; }, 3000);
     }
 
     function toggleClearBtn() {
@@ -472,7 +403,7 @@
 
     function clearSearch() {
         document.getElementById('search-box').value = '';
-        document.getElementById('search-clear').classList.remove('visible');
+        toggleClearBtn();
         renderGallery();
     }
 
@@ -480,9 +411,7 @@
         return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     </script>
 </body>
 </html>
