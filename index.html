@@ -30,7 +30,7 @@
             background: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 0 0 60px 0;
+            padding: 0 0 80px 0;
             overflow-x: hidden;
         }
 
@@ -80,50 +80,62 @@
 
         #search-clear.visible { display: block; }
 
+        /* --- TWIN VIEW RESTORED --- */
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
             padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .coin-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            overflow: hidden;
-            position: relative;
-            aspect-ratio: 1/1.3;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .twin-view {
             display: flex;
-            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .coin-photo-container {
+            flex: 1;
+            aspect-ratio: 1/1;
+            background: var(--surface2);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
         }
 
         .coin-img {
             width: 100%;
-            height: 70%;
+            height: 100%;
             object-fit: cover;
-            background: #eee;
         }
 
-        .coin-info {
-            padding: 8px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .photo-label {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
 
-        .coin-name {
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.2;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .coin-details {
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
         }
 
-        .coin-id { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+        .coin-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .coin-meta { font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; }
 
         .nav-bar {
             position: fixed;
@@ -194,11 +206,7 @@
             display: none;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-dim);
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
     </style>
 </head>
 <body>
@@ -224,14 +232,18 @@
 
     <div id="add-modal" class="modal">
         <div class="modal-content">
-            <h3>Add New Coin</h3>
+            <h3>Add New Specimen</h3>
             <div class="form-group">
-                <label>Photo</label>
-                <input type="file" id="coin-photo" accept="image/*" capture="environment">
+                <label>Obverse (Front)</label>
+                <input type="file" id="coin-obverse" accept="image/*" capture="environment">
+            </div>
+            <div class="form-group">
+                <label>Reverse (Back)</label>
+                <input type="file" id="coin-reverse" accept="image/*" capture="environment">
             </div>
             <div class="form-group">
                 <label>Identification / Name</label>
-                <input type="text" id="coin-name" placeholder="e.g. 1921 Morgan Dollar">
+                <input type="text" id="coin-name" placeholder="e.g. 7th C. Arab-Byzantine Follis">
             </div>
             <div class="form-group">
                 <label>Coin ID / Catalog #</label>
@@ -265,7 +277,6 @@
     <div id="toast"></div>
 
     <script>
-    // --- DATABASE SETUP ---
     let db;
     const request = indexedDB.open("CoinStackDB", 1);
 
@@ -281,27 +292,25 @@
         renderGallery();
     };
 
-    // --- MODAL LOGIC ---
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // --- SAVE LOGIC ---
     async function saveCoin() {
         const name = document.getElementById('coin-name').value;
         const coinID = document.getElementById('coin-id-val').value;
-        const photoFile = document.getElementById('coin-photo').files[0];
+        const obvFile = document.getElementById('coin-obverse').files[0];
+        const revFile = document.getElementById('coin-reverse').files[0];
 
         if (!name) { showToast("Please enter a name"); return; }
 
-        let photoBase64 = null;
-        if (photoFile) {
-            photoBase64 = await toBase64(photoFile);
-        }
+        let obverse = obvFile ? await toBase64(obvFile) : null;
+        let reverse = revFile ? await toBase64(revFile) : null;
 
         const newCoin = {
             name,
             coinID,
-            obverse: photoBase64,
+            obverse,
+            reverse,
             dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
         };
 
@@ -311,9 +320,10 @@
             closeModal('add-modal');
             document.getElementById('coin-name').value = '';
             document.getElementById('coin-id-val').value = '';
-            document.getElementById('coin-photo').value = '';
+            document.getElementById('coin-obverse').value = '';
+            document.getElementById('coin-reverse').value = '';
             renderGallery();
-            showToast("✓ Coin added to vault");
+            showToast("✓ Specimen saved");
         };
     }
 
@@ -324,7 +334,6 @@
         reader.onerror = error => reject(error);
     });
 
-    // --- GALLERY RENDERING ---
     function renderGallery() {
         const gallery = document.getElementById('gallery');
         const searchTerm = document.getElementById('search-box').value.toLowerCase();
@@ -342,7 +351,7 @@
             );
 
             if (filtered.length === 0) {
-                gallery.innerHTML = `<div class="empty-state">No specimens found${searchTerm ? ' matching search' : ''}.</div>`;
+                gallery.innerHTML = `<div class="empty-state">No specimens found.</div>`;
                 return;
             }
 
@@ -350,10 +359,20 @@
                 const card = document.createElement('div');
                 card.className = 'coin-card';
                 card.innerHTML = `
-                    <img class="coin-img" src="${coin.obverse || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}">
-                    <div class="coin-info">
+                    <div class="twin-view">
+                        <div class="coin-photo-container">
+                            <img class="coin-img" src="${coin.obverse || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}">
+                        </div>
+                        <div class="coin-photo-container">
+                            <img class="coin-img" src="${coin.reverse || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}">
+                        </div>
+                    </div>
+                    <div class="coin-details">
                         <div class="coin-name">${escHtml(coin.name)}</div>
-                        <div class="coin-id">${escHtml(coin.coinID || 'No ID')}</div>
+                        <div class="coin-meta">
+                            <span>ID: ${escHtml(coin.coinID || 'None')}</span>
+                            <span>Added: ${coin.dateAdded || 'Unknown'}</span>
+                        </div>
                     </div>
                 `;
                 gallery.appendChild(card);
@@ -361,7 +380,6 @@
         };
     }
 
-    // --- EXPORT / IMPORT LOGIC ---
     function exportData() {
         const tx = db.transaction("coins", "readonly");
         const store = tx.objectStore("coins");
@@ -378,7 +396,7 @@
         };
     }
 
-    // --- REFINED IMPORT FOR iOS 26.4.1 ---
+    // --- STREAMLINED IMPORT FOR iOS 26.4.1 ---
     const importBtn = document.querySelector('.btn-import');
     const importInput = document.getElementById('import-input');
 
@@ -394,75 +412,24 @@
             const reader = new FileReader();
             reader.onload = (ev) => {
                 let coins = [];
-                const fileName = file.name.toLowerCase();
-
-                if (fileName.endsWith('.json')) {
-                    try {
-                        coins = JSON.parse(ev.target.result);
-                    } catch {
-                        showToast("⚠️ Invalid JSON");
-                        return;
-                    }
-                } else if (fileName.endsWith('.csv')) {
-                    try {
-                        const raw = parseCSV(ev.target.result);
-                        coins = raw.map(row => ({
-                            coinID: row.CoinID || row.coinID || "No ID",
-                            name: [
-                                row.Year || row.year || '',
-                                (row.Mintmark || row.Mint || '').charAt(0),
-                                row.CoinTypeName || row.CoinType || ''
-                            ].filter(Boolean).join(' ').trim(),
-                            obverse: null,
-                            reverse: null,
-                            dateAdded: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                        }));
-                    } catch (err) {
-                        showToast("⚠️ CSV error — check columns");
-                        return;
-                    }
+                try {
+                    coins = JSON.parse(ev.target.result);
+                } catch {
+                    showToast("⚠️ Invalid data file");
+                    return;
                 }
 
                 if (Array.isArray(coins) && coins.length > 0) {
-                    // Use native confirm to keep file token active on iOS
-                    if (confirm(`REPLACE current vault with ${coins.length} specimens from ${file.name}?`)) {
+                    if (confirm(`REPLACE current vault with ${coins.length} specimens?`)) {
                         doReplaceAll(coins);
                     }
                 } else {
-                    showToast("⚠️ No data found in file");
+                    showToast("⚠️ No data found");
                 }
             };
-
             reader.readAsText(file);
-            this.value = ''; // Reset input to allow re-importing the same file
+            this.value = '';
         });
-    }
-
-    function parseCSV(str) {
-        const lines = str.split('\n');
-        const headers = splitCSVLine(lines[0]);
-        return lines.slice(1).filter(l => l.trim()).map(line => {
-            const values = splitCSVLine(line);
-            return headers.reduce((obj, header, i) => {
-                obj[header.trim()] = values[i] ? values[i].trim() : '';
-                return obj;
-            }, {});
-        });
-    }
-
-    function splitCSVLine(line) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        for (let char of line) {
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) {
-                result.push(current);
-                current = '';
-            } else current += char;
-        }
-        result.push(current);
-        return result;
     }
 
     function doReplaceAll(coins) {
@@ -472,27 +439,22 @@
             const tx2 = db.transaction("coins", "readwrite");
             const store2 = tx2.objectStore("coins");
             coins.forEach(coin => {
-                // Ensure we don't carry over old 'id' keys to prevent collisions
                 const { id, ...coinData } = coin;
                 store2.add(coinData);
             });
             tx2.oncomplete = () => {
                 renderGallery();
                 closeModal('settings-modal');
-                showToast(`✓ Vault replaced with ${coins.length} specimen(s)`);
+                showToast(`✓ Vault restored`);
             };
         };
     }
 
     function wipeDatabase() {
-        if (confirm("DANGER: This will permanently delete all local coin data. Proceed?")) {
+        if (confirm("Permanently wipe all local data?")) {
             const tx = db.transaction("coins", "readwrite");
             tx.objectStore("coins").clear();
-            tx.oncomplete = () => {
-                renderGallery();
-                closeModal('settings-modal');
-                showToast("Vault cleared");
-            };
+            tx.oncomplete = () => { renderGallery(); closeModal('settings-modal'); showToast("Vault cleared"); };
         }
     }
 
@@ -515,14 +477,9 @@
     }
 
     function escHtml(str) {
-        return String(str || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
+        return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // Register Service Worker for PWA functionality
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
